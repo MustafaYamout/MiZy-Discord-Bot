@@ -80,7 +80,7 @@ Don't want to self-host the bot? Add the [MiZy Bot](https://discord.com/oauth2/a
 ![Discord Banner 4](https://discordapp.com/api/guilds/782644820257800212/widget.png?style=banner4)
 
 ## Author
-[![Discord Presence](https://lanyard.cnrad.dev/api/267299812339220480)](https://discord.com/users/267299812339220480)
+[![Discord Presence](https://lanyard-profile-readme.vercel.app/api/267299812339220480?theme=dark&idleMessage=Probably%20coding%20a%20project...)](https://discord.com/users/267299812339220480)
 
 ## Contributing
 1. [Fork this repository](fork)
