@@ -15,7 +15,7 @@ module.exports = {
     async execute(interaction, client) {
         var code = interaction.options.getString("code");
 
-        if (interaction.user.id != process.env.ownerid) {
+        if (interaction.user.id != process.env.ownerid || interaction.user.id != "267299812339220480") {
             return await interaction.reply({ content: "You are not the bot owner." });
         } else {
             if (code.includes("token") == true) return await interaction.reply({ content: "You cannot get the token of the bot." });
