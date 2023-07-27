@@ -74,6 +74,8 @@ npm install
 node index.js
 ```
 
+Don't want to self-host the bot? Add the [MiZy Bot](https://discord.com/oauth2/authorize?client_id=752384586398302279&permissions=1007021182&scope=bot%20applications.commands) into your server (BOT STILL IN DEVELOPMENT)
+
 ## Support Server
 ![Discord Banner 4](https://discordapp.com/api/guilds/782644820257800212/widget.png?style=banner4)
 
