@@ -50,6 +50,7 @@
 - [ ] Auto-Moderation
 - [ ] Ticket System
 - [ ] Economy
+- [ ] Welcome & Leave Messages
 
 ## Requirements
 - Node.js v16+
@@ -74,7 +75,7 @@ npm install
 node index.js
 ```
 
-Don't want to self-host the bot? Add the [MiZy Bot](https://discord.com/oauth2/authorize?client_id=752384586398302279&permissions=1007021182&scope=bot%20applications.commands) into your server (BOT STILL IN DEVELOPMENT)
+Don't want to self-host the bot? Add the [MiZy Bot!](https://discord.com/oauth2/authorize?client_id=752384586398302279&permissions=1007021182&scope=bot%20applications.commands) into your server (BOT STILL IN DEVELOPMENT)
 
 ## Support Server
 ![Discord Banner 4](https://discordapp.com/api/guilds/782644820257800212/widget.png?style=banner4)
@@ -84,10 +85,22 @@ Don't want to self-host the bot? Add the [MiZy Bot](https://discord.com/oauth2/a
 
 ## Contributing
 1. [Fork this repository](fork)
-2. Clone your fork: `git clone https://github.com/your-username/music-slash-bot.git`
-3. Create your feature branch: `git checkout -b <branch-name>`
-4. Commit your changes: `git commit -m <commit message>`
-5. Push to the branch: `git push -u origin <branch-name>`
+2. Clone your fork:
+```bash
+git clone https://github.com/your-username/MiZy-Discord-Bot.git`
+```
+3. Create your feature branch: 
+```bash
+git checkout -b <branch-name>
+```
+4. Commit your changes:
+```bash
+git commit -m <commit message>
+```
+5. Push to the branch:
+```bash
+git push -u origin <branch-name>
+```
 6. Submit a pull request
 
 ## Project Activity
