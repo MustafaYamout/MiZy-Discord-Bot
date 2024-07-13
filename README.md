@@ -1,5 +1,5 @@
 <h1 align="center">
-    <a href="#"><img src="https://media.discordapp.net/attachments/782648229648400424/1133440971540021278/MiZy.gif" alt="MiZy Discord Bot"></a>
+    <a href="#"><img src="[https://media.discordapp.net/attachments/782648229648400424/1133440971540021278/MiZy.gif](https://cdn.discordapp.com/attachments/1145943627185532960/1261735312145776640/MiZy.gif?ex=66940a14&is=6692b894&hm=3a970a683baeda0dbd8dad50cf3c293d1703e12cdb12750cb42dfb13669bc4e0&)" alt="MiZy Discord Bot"></a>
     <br>MiZy Discord Bot
 </h1>
 
@@ -87,7 +87,7 @@ Don't want to self-host the bot? Add the [MiZy Bot!](https://discord.com/oauth2/
 1. [Fork this repository](fork)
 2. Clone your fork:
 ```bash
-git clone https://github.com/your-username/MiZy-Discord-Bot.git`
+git clone https://github.com/your-username/MiZy-Discord-Bot.git
 ```
 3. Create your feature branch: 
 ```bash
