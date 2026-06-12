@@ -26,7 +26,7 @@
         <img src="https://img.shields.io/github/issues/MustafaYamout/MiZy-Discord-Bot?style=for-the-badge" alt="Issues">
     </a>
     <a href="https://github.com/MustafaYamout/MiZy-Discord-Bot/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/MustafaYamout/MiZy-Discord-Bot.svg?style=for-the-badge" alt="License">
+        <img src="https://img.shields.io/github/license/MustafaYamout/MiZy-Discord-Bot?style=for-the-badge" alt="License">
     </a>
 </p>
 
