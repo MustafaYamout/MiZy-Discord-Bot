@@ -14,7 +14,7 @@
         <img src="https://img.shields.io/badge/Discord.js-v14-blue?style=for-the-badge" alt="discord.js">
     </a>
     <a href="https://github.com/MustafaYamout/MiZy-Discord-Bot/stargazers">
-        <img src="https://img.shields.io/github/stars/MustafaYamout/MiZy-Discord-Bot.svg?style=for-the-badge" alt="Stars">
+        <img src="https://img.shields.io/github/stars/MustafaYamout/MiZy-Discord-Bot?style=for-the-badge" alt="Stars">
     </a>
     <a href="https://github.com/MustafaYamout/MiZy-Discord-Bot/network/members">
         <img src="https://img.shields.io/github/forks/MustafaYamout/MiZy-Discord-Bot.svg?style=for-the-badge" alt="Forks">
@@ -23,9 +23,9 @@
         <img src="https://img.shields.io/github/contributors/MustafaYamout/MiZy-Discord-Bot.svg?style=for-the-badge" alt="Contributors">
     </a>
     <a href="https://github.com/MustafaYamout/MiZy-Discord-Bot/issues">
-        <img src="https://img.shields.io/github/issues/MustafaYamout/MiZy-Discord-Bot.svg?style=for-the-badge" alt="Issues">
+        <img src="https://img.shields.io/github/issues/MustafaYamout/MiZy-Discord-Bot?style=for-the-badge" alt="Issues">
     </a>
-    <a href="https://github.com/MustafaYamout/MiZy-Discord-Bot/blob/master/LICENSE">
+    <a href="https://github.com/MustafaYamout/MiZy-Discord-Bot/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/MustafaYamout/MiZy-Discord-Bot.svg?style=for-the-badge" alt="License">
     </a>
 </p>
