@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder, PermissionsBitField, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -15,52 +15,56 @@ module.exports = {
 
         if (!interaction.inGuild()) return await interaction.reply({
             content: "❌ | This command can only be used in a server!",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
-        
+
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
             return await interaction.reply({
-                content: "❌ | You don't have the `KickMembers` permission to kick a user!"
+                content: "❌ | You don't have the `KickMembers` permission to kick a user!",
+                flags: MessageFlags.Ephemeral,
             });
-        } else {
-            if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
-                return await interaction.reply({
-                    content: "❌ | I don't have the `KickMembers` permission to kick a user! Please give me this permission and try again."
-                });
-            } else {
-                const user = interaction.options.getMember("user");
-                const reason = interaction.options.getString("reason") || "No reason provided.";
-
-                if (user.id === interaction.user.id) {
-                    return await interaction.reply({
-                        content: "❌ | You can't kick yourself!",
-                        ephemeral: true
-                    });
-                } else if (user.id === client.user.id) {
-                    return await interaction.reply({
-                        content: "❌ | You can't kick me!",
-                        ephemeral: true
-                    });
-                } else if (user.id === interaction.guild.ownerId) {
-                    return await interaction.reply({
-                        content: "❌ | You can't kick the server owner!",
-                        ephemeral: true
-                    });
-                } else {
-                    if (!user.kickable) {
-                        return await interaction.reply({
-                            content: "❌ | I can't kick this user! Please make sure that I have a higher role than the member you are trying to kick.",
-                            ephemeral: true
-                        });
-                    } else {
-                        await user.ban({ reason: reason });
-
-                        await interaction.reply({
-                            content: `✅ | Successfully kickeded ${user.user.tag}!`
-                        });
-                    }
-                }
-            }
         }
+
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+            return await interaction.reply({
+                content: "❌ | I don't have the `KickMembers` permission to kick a user! Please give me this permission and try again.",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        const user = interaction.options.getMember("user");
+        const reason = interaction.options.getString("reason") || "No reason provided.";
+
+        if (!user) return await interaction.reply({
+            content: "❌ | That user is not a member of this server!",
+            flags: MessageFlags.Ephemeral,
+        });
+
+        if (user.id === interaction.user.id) {
+            return await interaction.reply({
+                content: "❌ | You can't kick yourself!",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        if (user.id === client.user.id) {
+            return await interaction.reply({
+                content: "❌ | You can't kick me!",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        if (!user.kickable) {
+            return await interaction.reply({
+                content: "❌ | I can't kick this user! Please make sure that I have a higher role than the member you are trying to kick.",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        await user.kick({ reason });
+
+        await interaction.reply({
+            content: `✅ | Successfully kicked ${user.user.username}!`
+        });
     }
 }

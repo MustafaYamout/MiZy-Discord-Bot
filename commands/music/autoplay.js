@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -6,30 +6,20 @@ module.exports = {
     .setName("autoplay")
     .setDescription("Enable/Disable autoplay for the queue!"),
     async execute(interaction, client) {
-        const queue = client.distube.getQueue(interaction);
-        const voiceChannel = interaction.member.voice.channel;
+        if (!client.voiceContext(interaction, client)) return;
 
-        if (!interaction.inGuild()) return await interaction.reply({
-            content: "❌ | This command can only be used in a server!",
-            ephemeral: true
-        });
+        try {
+            const mode = client.distube.toggleAutoplay(interaction);
 
-        if (!voiceChannel) return await interaction.reply({
-            content: "❌ | You must be in a voice channel to use this command!",
-            ephemeral: true
-        });
-
-        if(!queue) return await interaction.reply({
-            content: `${client.lemoji.error} | There is nothing playing!`,
-            ephemeral: true
-        });
-
-        if (interaction.guild.members.me.voice.channelId !== interaction.member.voice.channelId) return interaction.reply({
-            content: `${client.lemoji.error} | You are not on the same voice channel as me!`,
-            ephemeral: true
-        });
-        
-        const mode = client.distube.toggleAutoplay(interaction)
-        return interaction.reply("✅ | Set autoplay mode to `" + (mode ? "True" : "False") + "`")
+            await interaction.reply({
+                content: `✅ | Set autoplay mode to \`${mode ? "True" : "False"}\``
+            });
+        } catch (err) {
+            console.log(err)
+            await interaction.reply({
+                content: `${client.lemoji.error} | There was an error toggling autoplay!`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

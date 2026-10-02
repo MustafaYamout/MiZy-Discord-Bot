@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder, PermissionsBitField, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -15,54 +15,56 @@ module.exports = {
 
         if (!interaction.inGuild()) return await interaction.reply({
             content: "❌ | This command can only be used in a server!",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
-        
+
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
             return await interaction.reply({
                 content: "❌ | You don't have the `BanMembers` permission to ban a user!",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral,
             });
-        } else {
-            if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) {
-                return await interaction.reply({
-                    content: "❌ | I don't have the `BanMembers` permission to ban a user! Please give me this permission and try again.",
-                    ephemeral: true
-                });
-            } else {
-                const user = interaction.options.getMember("user");
-                const reason = interaction.options.getString("reason") || "No reason provided.";
-
-                if (user.id === interaction.user.id) {
-                    return await interaction.reply({
-                        content: "❌ | You can't ban yourself!",
-                        ephemeral: true
-                    });
-                } else if (user.id === client.user.id) {
-                    return await interaction.reply({
-                        content: "❌ | You can't ban me!",
-                        ephemeral: true
-                    });
-                } else if (user.id === interaction.guild.ownerId) {
-                    return await interaction.reply({
-                        content: "❌ | You can't ban the server owner!",
-                        ephemeral: true
-                    });
-                } else {
-                    if (!user.bannable) {
-                        return await interaction.reply({
-                            content: "❌ | I can't ban this user! Please make sure that I have a higher role than the member you are trying to ban.",
-                            ephemeral: true
-                        });
-                    } else {
-                        await user.ban({ reason: reason });
-
-                        await interaction.reply({
-                            content: `✅ | Successfully banned ${user.user.tag}!`
-                        });
-                    }
-                }
-            }
         }
+
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) {
+            return await interaction.reply({
+                content: "❌ | I don't have the `BanMembers` permission to ban a user! Please give me this permission and try again.",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        const user = interaction.options.getMember("user");
+        const reason = interaction.options.getString("reason") || "No reason provided.";
+
+        if (!user) return await interaction.reply({
+            content: "❌ | That user is not a member of this server!",
+            flags: MessageFlags.Ephemeral,
+        });
+
+        if (user.id === interaction.user.id) {
+            return await interaction.reply({
+                content: "❌ | You can't ban yourself!",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        if (user.id === client.user.id) {
+            return await interaction.reply({
+                content: "❌ | You can't ban me!",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        if (!user.bannable) {
+            return await interaction.reply({
+                content: "❌ | I can't ban this user! Please make sure that I have a higher role than the member you are trying to ban.",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        await user.ban({ reason });
+
+        await interaction.reply({
+            content: `✅ | Successfully banned ${user.user.username}!`
+        });
     }
 }

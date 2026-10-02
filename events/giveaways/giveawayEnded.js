@@ -11,8 +11,8 @@ module.exports = {
             .setDescription(`You have won the [Giveaway!](${url})\n Your prize is: **${giveaway.prize}**!`)
             .setTimestamp()
 
-        winners.forEach((winner) => {
-            winner.send({ embeds: [embed] })
-        });
+        await Promise.allSettled(
+            winners.map((winner) => winner.send({ embeds: [embed] }))
+        );
     }
 }

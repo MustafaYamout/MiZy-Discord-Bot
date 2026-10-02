@@ -7,14 +7,12 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor("Red")
-            .setTitle(`${client.lemoji.success} | Success!`)
-            .setDescription(`You have entered [Giveaway](${url}), Good luck!`)
+            .setTitle(`${client.lemoji.error} | Sorry!`)
+            .setDescription(`This [Giveaway](${url}) has already ended!`)
             .setTimestamp()
 
-        reaction.users.remove(member.user);
+        await reaction.users.remove(member.user.id).catch(() => {});
 
-        member.send({ embeds: [embed] })
-
-
+        member.send({ embeds: [embed] }).catch(() => {});
     }
 }

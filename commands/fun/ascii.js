@@ -1,5 +1,8 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder } = require("discord.js");
 const figlet = require("figlet");
+const { promisify } = require("util");
+
+const render = promisify(figlet);
 
 module.exports = {
     cooldown: 3,
@@ -8,20 +11,18 @@ module.exports = {
     .setDescription("Turn your text into ASCII art!")
     .addStringOption(option => option.setName("text")
     .setDescription("The text you want to put on the achievement.")
+    .setMaxLength(100)
     .setRequired(true)),
     async execute(interaction, client) {
-        figlet(interaction.options.getString("text"), function(err, data) {
-            if (err) {
-                interaction.reply({
-                    content: "Something went wrong... Please try again later."
-                })
-                console.dir(err);
-                return;
-            }
+        const text = interaction.options.getString("text");
 
-            interaction.reply({
-                content: "```" + data + "```"
-            })
-        })
+        try {
+            const data = await render(text);
+
+            await interaction.reply({ content: "```" + data.slice(0, 1900) + "```" });
+        } catch (err) {
+            console.dir(err);
+            await interaction.reply({ content: "Something went wrong... Please try again later." });
+        }
     }
 }

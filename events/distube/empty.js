@@ -8,6 +8,6 @@ module.exports = {
             .setDescription(`👋 | Voice channel is empty! Leaving the channel..`)
             .setTimestamp()
 
-        await textChannel.send({ embeds: [embed] });
+        await queue.textChannel.send({ embeds: [embed] }).catch(() => {});
     }
 }

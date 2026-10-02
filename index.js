@@ -1,20 +1,24 @@
 require("dotenv").config();
 require("./database/connect")();
+
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const fs = require("fs");
+const path = require("path");
+
 const emojis = {
     "play": "▶️",
     "stop": "⏹️",
     "queue": "📄",
     "success": "✅",
-    "repeat": "🔁",    
+    "repeat": "🔁",
     "error": "❌",
     "pause": "⏸️",
+    "resume": "▶️",
     "shuffle": "🔀",
     "skip": "⏭️",
 }
 
-const client = new Client({intents: [
+const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessageReactions,
@@ -26,27 +30,30 @@ client.cooldowns = new Collection();
 client.commandArray = [];
 client.lemoji = emojis;
 
-const functionfolder = fs.readdirSync("./functions/");
+const functionfolder = fs.readdirSync(path.join(__dirname, "functions"));
 
-for (const folders of functionfolder) {
-    const functionfiles = fs.readdirSync(`./functions/${folders}`)
+for (const folder of functionfolder) {
+    const functionfiles = fs.readdirSync(path.join(__dirname, "functions", folder))
     .filter((files) => files.endsWith(".js"));
 
-    switch (folders) {
+    switch (folder) {
         case "handlers":
             for (const file of functionfiles)
-                require(`./functions/${folders}/${file}`)(client);
+                require(path.join(__dirname, "functions", folder, file))(client);
             break;
-        
+
         case "Util":
             for (const file of functionfiles)
-                require(`./functions/${folders}/${file}`)(client);
+                require(path.join(__dirname, "functions", folder, file))(client);
             break;
-            
     }
 }
 
-client.HandleEvents();
-client.HandleCommands();
+async function main() {
+    await client.HandleEvents();
+    await client.HandleCommands();
 
-client.login(process.env.token)
+    await client.login(process.env.token);
+}
+
+main();

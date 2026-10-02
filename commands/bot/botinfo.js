@@ -18,7 +18,7 @@ module.exports = {
         .addFields(
             { name: "Information", value: `${client.user.username} is a multi-purpose Discord bot with over 70 commands, ready to enlighten your server!`, inline: false },
             { name: "_____ \n\n│General", value: `_____`, inline: false },
-            { name: "Bot Name", value: `${client.user.tag}`, inline: true },
+            { name: "Bot Name", value: `${client.user.username}`, inline: true },
             { name: "Shards", value: `${client.options.shardCount} shard(s)`, inline: true },
             { name: "Bot Creator", value: `<@267299812339220480>`, inline: true },
             { name: "Servers", value: `${client.guilds.cache.size}`, inline: true },

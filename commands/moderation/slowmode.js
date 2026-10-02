@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder, PermissionsBitField, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -8,29 +8,39 @@ module.exports = {
     .addIntegerOption(option => option
     .setName("seconds")
     .setDescription("The rate limit in seconds.")
+    .setMinValue(0)
+    .setMaxValue(21600)
     .setRequired(true)),
     async execute(interaction, client) {
 
         if (!interaction.inGuild()) return await interaction.reply({
             content: "❌ | This command can only be used in a server!",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
 
-        if (!interaction.members.permissions.has(PermissionsBitField.Flags.ManageChannels)) return await interaction.reply({ 
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) return await interaction.reply({
             content: "❌ | You don't have the `ManageChannels` permission to change the slowmode!",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
 
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageChannels)) return await interaction.reply({ 
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageChannels)) return await interaction.reply({
             content: "❌ | I don't have the `ManageChannels` permission to change the slowmode! Please give me this permission and try again.",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
-        
+
+        if (!interaction.channel.isTextBased()) return await interaction.reply({
+            content: "❌ | This command can only be used in a text channel!",
+            flags: MessageFlags.Ephemeral,
+        });
+
         const seconds = interaction.options.getInteger("seconds");
 
-        if (seconds > 21600 || seconds < 0) return await interaction.reply({ content: "❌ | The number must be less than 21600!" });
+        if (seconds > 21600 || seconds < 0) return await interaction.reply({
+            content: "❌ | The number must be less than 21600!",
+            flags: MessageFlags.Ephemeral,
+        });
 
-        interaction.channel.setRateLimitPerUser(seconds)
+        await interaction.channel.setRateLimitPerUser(seconds);
 
         if (seconds != 0) {
             await interaction.reply({

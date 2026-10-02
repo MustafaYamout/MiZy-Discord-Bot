@@ -1,40 +1,49 @@
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
-const { joinVoiceChannel } = require("@discordjs/voice");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
     data: new SlashCommandBuilder()
     .setName("seek")
-    .setDescription("Set the playing time to another position!"),
+    .setDescription("Seek to a specific time in the current song!")
+    .addIntegerOption(option => option
+    .setName("seconds")
+    .setDescription("The position to seek to, in seconds.")
+    .setMinValue(0)
+    .setRequired(true)),
     async execute(interaction, client) {
-        const queue = client.distube.getQueue(interaction);
-        const voiceChannel = interaction.member.voice.channel;
+        const ctx = client.voiceContext(interaction, client);
+        if (!ctx) return;
 
-        if (!interaction.inGuild()) return await interaction.reply({
-            content: "❌ | This command can only be used in a server!",
-            ephemeral: true
-        });
+        const { queue } = ctx;
+        const seconds = interaction.options.getInteger("seconds");
+        const song = queue.songs[0];
 
-        if (!voiceChannel) return await interaction.reply({
-            content: "❌ | You must be in a voice channel to use this command!",
-            ephemeral: true
-        });
+        if (!song) {
+            return await interaction.reply({
+                content: `${client.lemoji.error} | There is nothing playing!`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
 
-        if(!queue) return await interaction.reply({
-            content: `${client.lemoji.error} | There is nothing playing!`,
-            ephemeral: true
-        });
-        
-        const connection = joinVoiceChannel({
-            channelId: interaction.member.voice.channelId,
-            guildId: interaction.guildId,
-            adapterCreator: interaction.guild.voiceAdapterCreator
-        });
+        if (song.duration && seconds > song.duration) {
+            return await interaction.reply({
+                content: `${client.lemoji.error} | That position is past the end of the song (${song.formattedDuration}).`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
 
-        connection.destroy();
+        try {
+            await client.distube.seek(interaction, seconds);
 
-        await interaction.reply({
-            content: `${client.lemoji.success} | Successfully left the voice channel!`,
-        });
+            await interaction.reply({
+                content: `${client.lemoji.success} | Seeked to \`${seconds}s\`!`
+            });
+        } catch (err) {
+            console.log(err)
+            await interaction.reply({
+                content: `${client.lemoji.error} | I couldn't seek to that position.`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

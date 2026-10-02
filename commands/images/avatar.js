@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, Embed } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -15,13 +15,11 @@ module.exports = {
         const embed = new EmbedBuilder()
         .setColor("Random")
         .setAuthor({
-            name: user.tag,
+            name: user.username,
             iconURL: user.displayAvatarURL({ dynamic: true })
         })
         .setImage(user.displayAvatarURL({ dynamic: true, size: 4096 }))
 
-        await interaction.reply({
-            embeds: [embed]
-        })
+        await interaction.reply({ embeds: [embed] });
     }
 }

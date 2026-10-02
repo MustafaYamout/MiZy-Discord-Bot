@@ -13,35 +13,15 @@ module.exports = {
     .setDescription("The volume you want to set!")
     .setRequired(true)),
     async execute(interaction, client) {
-        const volume = interaction.options.getInteger("volume")
-        const queue = client.distube.getQueue(interaction);
-        const voiceChannel = interaction.member.voice.channel;
+        const ctx = client.voiceContext(interaction, client);
+        if (!ctx) return;
 
-        if (!interaction.inGuild()) return await interaction.reply({
-            content: "❌ | This command can only be used in a server!",
-            ephemeral: true
-        });
+        const { queue } = ctx;
+        const volume = interaction.options.getInteger("volume");
 
-        if (!voiceChannel) return await interaction.reply({
-            content: "❌ | You must be in a voice channel to use this command!",
-            ephemeral: true
-        });
+        client.distube.setVolume(interaction, volume);
 
-        if(!queue) return await interaction.reply({
-            content: `${client.lemoji.error} | There is nothing playing!`,
-            ephemeral: true
-        });
-
-        if (interaction.guild.members.me.voice.channelId !== interaction.member.voice.channelId) return interaction.reply({
-            content: `${client.lemoji.error} | You are not on the same voice channel as me!`,
-            ephemeral: true
-        });
-
-        await client.distube.setVolume(interaction, volume);
-        const max = 100;
-        const current = volume;
-
-        const bar = progressbar.splitBar(max, current, 20, "▬", "🔘")[0];
+        const bar = progressbar.splitBar(100, volume, 20, "▬", "🔘")[0];
 
         const embed = new EmbedBuilder()
         .setTitle("✅ | New Volume set!")
@@ -49,8 +29,6 @@ module.exports = {
         .setDescription(`\`${bar}\` \n Set the volume to \`${volume}\``)
         .setTimestamp()
 
-        await interaction.reply({
-            embeds: [embed]
-        });
+        await interaction.reply({ embeds: [embed] });
     }
 }
