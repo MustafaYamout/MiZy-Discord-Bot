@@ -52,11 +52,11 @@
 - [ ] Welcome & Leave Messages
 
 ## Requirements
-- Node.js **v22.12.0 or newer**
-- Discord Token from the [Discord Developer Portal][discord-portal]
-- MongoDB URL from [MongoDB](mongodb)
-- Client ID
-- Owner ID (Your Discord ID)
+- **Node.js** v22.12.0 or newer
+- **Discord Token** from the [Discord Developer Portal][discord-portal]
+- **MongoDB URL** from [MongoDB](mongodb)
+- **Client ID**
+- **Owner ID** (Your Discord ID)
 - **FFmpeg on your PATH** — the music system requires it, and DisTube v5 explicitly does *not*
   work with the `ffmpeg-static` package. On Windows: `winget install Gyan.FFmpeg`, then restart
   your terminal and confirm with `ffmpeg -version`.
