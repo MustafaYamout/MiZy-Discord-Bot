@@ -52,7 +52,7 @@
 - [ ] Welcome & Leave Messages
 
 ## Requirements
-- Node.js **v22.12.0 or newer** (required by `distube@5`; `discord.js@14.27` needs v18+)
+- Node.js **v22.12.0 or newer**
 - Discord Token from the [Discord Developer Portal][discord-portal]
 - MongoDB URL from [MongoDB](mongodb)
 - Client ID
