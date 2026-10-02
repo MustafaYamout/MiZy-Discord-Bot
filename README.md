@@ -130,7 +130,7 @@ git push -u origin <branch-name>
 ## License
 This project is licensed under the [GNU GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/) License - see the [LICENSE](LICENSE) file for details.
 
-#### Actual GitHub Repository date: July 27, 2023. Last dependency update: discord.js 14.11 → 14.27.
+#### Actual GitHub Repository date: July 27, 2023.
 
 [fork]: https://github.com/MustafaYamout/MiZy-Discord-Bot/fork
 [discord-portal]: https://discord.com/developers/applications
