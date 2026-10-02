@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
-const { joinVoiceChannel } = require("@discordjs/voice");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -7,39 +6,24 @@ module.exports = {
     .setName("leave")
     .setDescription("Leave the voice channel"),
     async execute(interaction, client) {
-        const queue = client.distube.getQueue(interaction);
-        const voiceChannel = interaction.member.voice.channel;
+        const ctx = client.voiceContext(interaction, client, { requireQueue: false });
+        if (!ctx) return;
 
-        if (!interaction.inGuild()) return await interaction.reply({
-            content: "❌ | This command can only be used in a server!",
-            ephemeral: true
-        });
+        try {
+            const queue = client.distube.getQueue(interaction);
+            if (queue) await queue.stop();
 
-        if (!voiceChannel) return await interaction.reply({
-            content: "❌ | You must be in a voice channel to use this command!",
-            ephemeral: true
-        });
+            client.distube.voices.leave(interaction.guildId);
 
-        if (interaction.guild.members.me.voice.channelId !== interaction.member.voice.channelId) return interaction.reply({
-            content: `${client.lemoji.error} | You are not on the same voice channel as me!`,
-            ephemeral: true
-        });
-
-        if(!queue) return await interaction.reply({
-            content: `${client.lemoji.error} | There is nothing playing!`,
-            ephemeral: true
-        });
-        
-        const connection = joinVoiceChannel({
-            channelId: interaction.member.voice.channelId,
-            guildId: interaction.guildId,
-            adapterCreator: interaction.guild.voiceAdapterCreator
-        });
-
-        connection.destroy();
-
-        await interaction.reply({
-            content: `${client.lemoji.success} | Successfully left the voice channel!`,
-        });
+            await interaction.reply({
+                content: `${client.lemoji.success} | Successfully left the voice channel!`,
+            });
+        } catch (err) {
+            console.log(err);
+            await interaction.reply({
+                content: `${client.lemoji.error} | There was an error leaving the voice channel!`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

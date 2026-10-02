@@ -1,8 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
 const Schema = require("../../database/models/economy");
 const SchemaCooldown = require("../../database/models/economyCooldown");
-
-// BROKEN //
+const ms = require("ms");
 
 module.exports = {
     cooldown: 3,
@@ -11,74 +10,62 @@ module.exports = {
     .setDescription("Beg for money!"),
 
     async execute(interaction, client) {
-        let min = 5
-        let max = 51
-        let timeout = 3000;
-        let amount = Math.floor(Math.random() * (max - min)) + min;
+        const min = 5;
+        const max = 51;
+        const timeout = 3000; // 3 seconds
+        const amount = Math.floor(Math.random() * (max - min)) + min;
 
         if (!interaction.inGuild()) return await interaction.reply({
             content: "❌ | This command can only be used in a server!",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
 
-        const data = await Schema.findOne({
-            User: interaction.user.id
-        });
+        let dataCooldown = await SchemaCooldown.findOne({ User: interaction.user.id });
+        const now = Date.now();
 
-        const dataCooldown = await SchemaCooldown.findOne({
-            User: interaction.user.id
-        });
-
-        if (dataCooldown && dataCooldown.Beg !== null && timeout - (Date.now() - dataCooldown.Beg) > 0) {
-            let time = (dataCooldown.Beg / 1000 + timeout / 1000).toFixed(0);
+        if (dataCooldown && dataCooldown.Beg && now - dataCooldown.Beg < timeout) {
+            const remaining = timeout - (now - dataCooldown.Beg);
 
             const embedCooldown = new EmbedBuilder()
             .setColor("Red")
             .setTitle("Error!")
-            .setDescription(`:x: | You've already begged! Beg again in ${time.minutes}m ${time.seconds}s`)
+            .setDescription(`:x: | You've already begged! Beg again in ${ms(remaining, { long: true })}.`)
             .setTimestamp();
 
-            await interaction.reply({
+            return await interaction.reply({
                 embeds: [embedCooldown],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral,
             });
-        } else if (dataCooldown) {
-            let time = (dataCooldown.Beg / 1000 + timeout / 1000).toFixed(0);
+        }
 
-            const embedBegged = new EmbedBuilder()
-            .setColor("Green")
-            .setDescription(`You have begged and received ${amount} coins!`)
-            .setFooter(`You can beg again after ${time.minutes}m ${time.seconds}s.`)
+        let data = await Schema.findOne({ User: interaction.user.id });
 
-            await interaction.reply({
-                embeds: [embedBegged]
-            });
-
-            if (dataCooldown) {
-                dataCooldown.Beg = Date.now();
-                dataCooldown.save();
-            } else {
-                new SchemaCooldown({
-                    User: interaction.user.id,
-                    Beg: Date.now()
-                }).save();
-            }
-
-            if (data) {
-                data.Money += amount
-                data.save();
-            } else {
-                new Schema({
-                    User: interaction.user.id,
-                    Money: amount,
-                    Bank: 0
-                }).save();
-            }
+        if (data) {
+            data.Money += amount;
+            await data.save();
         } else {
-            new SchemaCooldown({
+            data = await new Schema({
                 User: interaction.user.id,
-                Beg: Date.now()
+                Money: amount,
+                Bank: 0
             }).save();
         }
+
+        if (dataCooldown) {
+            dataCooldown.Beg = now;
+            await dataCooldown.save();
+        } else {
+            dataCooldown = await new SchemaCooldown({
+                User: interaction.user.id,
+                Beg: now
+            }).save();
+        }
+
+        const embedBegged = new EmbedBuilder()
+        .setColor("Green")
+        .setDescription(`You have begged and received ${amount} coins!`)
+        .setFooter({ text: `You can beg again after ${ms(timeout, { long: true })}.` })
+
+        await interaction.reply({ embeds: [embedBegged] });
     }
 }

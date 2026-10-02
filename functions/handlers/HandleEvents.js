@@ -1,17 +1,18 @@
 const fs = require("fs");
+const path = require("path");
 
 module.exports = (client) => {
-    client.HandleEvents = async() => {
-        const eventsFolder = fs.readdirSync(`./events`);
+    client.HandleEvents = async () => {
+        const eventsFolder = fs.readdirSync(path.join(__dirname, "../../events"));
 
         for (const folder of eventsFolder) {
-            const eventFiles = fs.readdirSync(`./events/${folder}`)
+            const eventFiles = fs.readdirSync(path.join(__dirname, "../../events", folder))
             .filter((file) => file.endsWith(".js"));
-            
-            switch(folder) {
+
+            switch (folder) {
                 case "client":
                     for (const file of eventFiles) {
-                        const event = require(`../../events/${folder}/${file}`);
+                        const event = require(path.join(__dirname, "../../events", folder, file));
 
                         if (event.once) {
                             client.once(event.name, (...args) => event.execute(...args, client));
@@ -20,21 +21,23 @@ module.exports = (client) => {
                         }
                     }
                     break;
-                
+
                 case "distube":
                     for (const file of eventFiles) {
-                        const event = require(`../../events/${folder}/${file}`);
+                        const event = require(path.join(__dirname, "../../events", folder, file));
 
                         client.distube.on(event.name, (...args) => event.execute(...args, client));
                     }
+                    break;
 
                 case "giveaways":
                     for (const file of eventFiles) {
-                        const event = require(`../../events/${folder}/${file}`);
+                        const event = require(path.join(__dirname, "../../events", folder, file));
 
                         client.giveaways.on(event.name, (...args) => event.execute(...args, client));
                     }
-                
+                    break;
+
                 default:
                     break;
             }

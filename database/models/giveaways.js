@@ -29,7 +29,7 @@ const giveaways = new mongoose.Schema({
     botsCanWin: Boolean,
     embedColor: mongoose.Mixed,
     embedColorEnd: mongoose.Mixed,
-    exemptPermissions: { type: [], default: undefined },
+    exemptPermissions: { type: [String], default: undefined },
     exemptMembers: String,
     bonusEntries: String,
     extraData: mongoose.Mixed,
@@ -54,5 +54,7 @@ const giveaways = new mongoose.Schema({
         roles: { type: [String], default: undefined }
     }
 }, { id: false });
+
+giveaways.index({ messageId: 1 });
 
 module.exports = mongoose.model('giveaways', giveaways);

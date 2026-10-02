@@ -1,10 +1,6 @@
-[
+[ 
   {
-    "topic": "you gave birth to a new born baby! what would you do with it?"
-  },
-  
-  {
-    "topic": "whats your favorite dish?"
+    "topic": "What's your favorite dish?"
   },
   
   {
@@ -16,7 +12,7 @@
   },
   
   {
-    "topic": "which person do you like the most on Discord?"
+    "topic": "Which person do you like the most on Discord?"
   },
   
   {
@@ -28,19 +24,19 @@
   },
   
   {
-    "topic": "who did you hug the most?"
+    "topic": "Who did you hug the most?"
   },
   
   {
-    "topic": "what game do you play the most?"
+    "topic": "What game do you play the most?"
   },
   
   {
-    "topic": "what the best thing you have encountered in your life?"
+    "topic": "What the best thing you have encountered in your life?"
   },
   
   {
-    "topic": "what do you find amazing?"
+    "topic": "What do you find amazing?"
   },
   
   {
@@ -60,14 +56,146 @@
   },
   
   {
-    "topic": "what was the worst food have you ever tasted?"
+    "topic": "what was the worst food you have ever tasted?"
   },
   
   {
-    "topic": "who do you voice/video call the most on Discord?"
+    "topic": "Who do you voice/video call the most on Discord?"
   },
   
   {
-    "topic": "what are you afraid of?"
+    "topic": "What are you afraid of?"
+  },
+
+  {
+    "topic": "You gave birth to a new born baby! what would you name him/her?"
+  },
+  
+  {
+    "topic": "If you could live on one planet in our solar system, but never come back, which one?"
+  },
+  
+  {
+    "topic": "First contact is tomorrow and it goes badly. What's your plan?"
+  },
+  
+  {
+    "topic": "You get to send one message to humanity 10,000 years from now. What do you write?"
+  },
+  
+  {
+    "topic": "Teleportation works, but you can only carry 10kg with you. What do you bring?"
+  },
+  
+  {
+    "topic": "A time machine only goes 24 hours into the past. What would you use it for?"
+  },
+  
+  {
+    "topic": "AI has cured every disease but put every artist out of work. Do you take it?"
+  },
+  
+  {
+    "topic": "Would you rather live 500 years, or be remembered for 500 years?"
+  },
+  
+  {
+    "topic": "Which science fiction movie or book predicted the future most accurately?"
+  },
+  
+  {
+    "topic": "You wake up 200 years from now in the same city, completely unchanged. It is silent. What do you do first?"
+  },
+  
+  {
+    "topic": "You've been chosen to crew the first generation ship to Proxima Centauri. You can never return to Earth. Do you accept?"
+  },
+  
+  {
+    "topic": "What's the most useful thing you learned completely by accident?"
+  },
+  
+  {
+    "topic": "What's a rule at your job or school that exists only because of tradition?"
+  },
+  
+  {
+    "topic": "What's something everyone praises that you genuinely dislike?"
+  },
+  
+  {
+    "topic": "If you could delete one app from your phone forever, which one and why?"
+  },
+  
+  {
+    "topic": "What's the worst advice you ever followed with complete confidence?"
+  },
+  
+  {
+    "topic": "What's the most money you've ever spent on something completely useless?"
+  },
+  
+  {
+    "topic": "If your life were a video game, where would you put all your stat points?"
+  },
+  
+  {
+    "topic": "What's the biggest difference between who you were at 10 and who you are now?"
+  },
+  
+  {
+    "topic": "What's something you believe that most people don't?"
+  },
+  
+  {
+    "topic": "What's the first thing you'd do with an extra hour that appeared every day?"
+  },
+  
+  {
+    "topic": "You get one superpower, but you can never use it for anything illegal. What is it?"
+  },
+  
+  {
+    "topic": "Every NPC in a video game becomes real tomorrow. Which game world would you actually want to live in?"
+  },
+  
+  {
+    "topic": "You can trade one memory for any skill you want. Which memory would you trade?"
+  },
+  
+  {
+    "topic": "If your life had a theme song that played every time you entered a room, what would it be?"
+  },
+  
+  {
+    "topic": "You inherit a lighthouse nobody wants. Do you take it?"
+  },
+  
+  {
+    "topic": "Pick any object in your room. If it could talk, what would it say about you?"
+  },
+  
+  {
+    "topic": "If your life had a loading screen tip, what would it say?"
+  },
+  
+  {
+    "topic": "Describe your life using only movie titles. What's the trilogy?"
+  },
+  
+  {
+    "topic": "You get to rewind one conversation a day and change a single sentence. When's the first one you'd use it on?"
+  },
+  
+  {
+    "topic": "You can open a portal to anywhere on Earth, but only one, and only once. Where does it go?"
+  },
+
+  {
+    "topic": "What is a quote you live by to this day?"
+  },
+
+  {
+    "topic": "What story you recently read that made you laugh hysterically?"
   }
 ]

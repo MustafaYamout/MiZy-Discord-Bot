@@ -6,7 +6,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor("Green")
-            .setTitle(`List has been added to queue!}`)
+            .setTitle(`List has been added to queue!`)
             .setDescription(`✅ | Added \`${playlist.name}\` playlist  - ${playlist.songs.length} songs has been to queue!`)
             .setTimestamp()
 

@@ -1,5 +1,7 @@
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
-const { joinVoiceChannel } = require("@discordjs/voice");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
+
+const MAX_LENGTH = 4000;
+const MAX_SONGS = 25;
 
 module.exports = {
     cooldown: 3,
@@ -7,41 +9,40 @@ module.exports = {
     .setName("queue")
     .setDescription("Check the queue!"),
     async execute(interaction, client) {
-        const queue = client.distube.getQueue(interaction);
-        const voiceChannel = interaction.member.voice.channel;
+        const ctx = client.voiceContext(interaction, client);
+        if (!ctx) return;
 
-        if (!interaction.inGuild()) return await interaction.reply({
-            content: "❌ | This command can only be used in a server!",
-            ephemeral: true
-        });
+        const { queue } = ctx;
 
-        if (!voiceChannel) return await interaction.reply({
-            content: "❌ | You must be in a voice channel to use this command!",
-            ephemeral: true
-        });
+        if (!queue.songs.length) {
+            return await interaction.reply({
+                content: `${client.lemoji.error} | There is nothing playing!`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
 
-        if(!queue) return await interaction.reply({
-            content: `${client.lemoji.error} | There is nothing playing!`,
-            ephemeral: true
-        });
+        const shown = queue.songs.slice(0, MAX_SONGS);
+        const hidden = queue.songs.length - shown.length;
 
-        if (interaction.guild.members.me.voice.channelId !== interaction.member.voice.channelId) return interaction.reply({
-            content: `${client.lemoji.error} | You are not on the same voice channel as me!`,
-            ephemeral: true
-        });
-        
-        const list = queue.songs.map((song, id) => {
+        let list = shown.map((song, id) => {
             return `${id === 0 ? "Playing:" : `${id}.`} ${song.name} - \`${song.formattedDuration}\``
-        }).join("\n")
+        }).join("\n");
+
+        if (list.length > MAX_LENGTH) list = `${list.slice(0, MAX_LENGTH)}\n…`;
+
+        const footer = [
+            `${queue.songs.length} song(s) in the queue`,
+            hidden > 0 ? `showing the first ${MAX_SONGS}` : null,
+            `Volume: ${queue.volume}%`,
+        ].filter(Boolean).join(" | ");
 
         const embed = new EmbedBuilder()
         .setTitle(`${client.lemoji.queue} | Current Queue:`)
         .setDescription(`${list}`)
         .setColor("Random")
+        .setFooter({ text: footer })
         .setTimestamp()
 
-        await interaction.reply({
-            embeds: [embed]
-        });
+        await interaction.reply({ embeds: [embed] });
     }
 }

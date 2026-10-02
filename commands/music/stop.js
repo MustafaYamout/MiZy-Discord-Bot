@@ -1,38 +1,25 @@
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
     data: new SlashCommandBuilder()
     .setName("stop")
-    .setDescription("Stops the song"),
+    .setDescription("Stops the song and clears the queue"),
     async execute(interaction, client) {
-        const queue = client.distube.getQueue(interaction);
-        const voiceChannel = interaction.member.voice.channel;
+        if (!client.voiceContext(interaction, client)) return;
 
-        if (!interaction.inGuild()) return await interaction.reply({
-            content: "❌ | This command can only be used in a server!",
-            ephemeral: true
-        });
+        try {
+            await client.distube.stop(interaction);
 
-        if (!voiceChannel) return await interaction.reply({
-            content: "❌ | You must be in a voice channel to use this command!",
-            ephemeral: true
-        });
-
-        if(!queue) return await interaction.reply({
-            content: `${client.lemoji.error} | There is nothing playing!`,
-            ephemeral: true
-        });
-
-        if (interaction.guild.members.me.voice.channelId !== interaction.member.voice.channelId) return interaction.reply({
-            content: `${client.lemoji.error} | You are not on the same voice channel as me!`,
-            ephemeral: true
-        });
-
-        await client.distube.stop(interaction);
-
-        await interaction.reply({
-            content: `${client.lemoji.stop} | Stopped the song!`
-        });
+            await interaction.reply({
+                content: `${client.lemoji.stop} | Stopped the song!`
+            });
+        } catch (err) {
+            console.log(err)
+            await interaction.reply({
+                content: `${client.lemoji.error} | There was an error stopping the song!`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

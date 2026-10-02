@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
 const isgd = require("isgd-api");
 
 module.exports = {
@@ -12,17 +12,27 @@ module.exports = {
     .setRequired(true)),
     async execute(interaction, client) {
         const url = interaction.options.getString("url");
-        
-        const link = await isgd.shorten(url);
+
+        let link;
+        try {
+            link = await isgd.shorten(url);
+        } catch (err) {
+            console.log(err);
+        }
+
+        if (!link || typeof link !== "string") {
+            return await interaction.reply({
+                content: `❌ | I couldn't shorten \`${url}\`. Please make sure it's a valid http(s) URL.`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
 
         const embed = new EmbedBuilder()
         .setColor("Green")
         .setTitle("Your shortened URL has been created!")
         .addFields({ name: "Link:", value: `${link}`, inline: true })
         .setTimestamp();
-        
-        await interaction.reply({
-            embeds: [embed]
-        })
+
+        await interaction.reply({ embeds: [embed] });
     }
 }

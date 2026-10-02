@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, Embed } = require("discord.js");
-const fetch = require("node-fetch");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 5,
@@ -8,17 +7,25 @@ module.exports = {
     .setDescription("Posts a random duck image!"),
 
     async execute(interaction, client) {
-        const res = await fetch("https://random-d.uk/api/random");
-        const { url: attachment } = await res.json();
+        try {
+            const res = await fetch("https://random-d.uk/api/random");
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const embed = new EmbedBuilder()
-        .setColor("Random")
-        .setDescription(`[Duck pics!](https://random-d.uk/)`)
-        .setImage(attachment, "duck.jpg")
-        .setFooter({ text: "Powered by random-d.uk"})
+            const { url: attachment } = await res.json();
 
-        await interaction.reply({
-            embeds: [embed]
-        })
+            const embed = new EmbedBuilder()
+            .setColor("Random")
+            .setDescription(`[Duck pics!](https://random-d.uk/)`)
+            .setImage(attachment)
+            .setFooter({ text: "Powered by random-d.uk"})
+
+            await interaction.reply({ embeds: [embed] });
+        } catch (err) {
+            console.log(err);
+            await interaction.reply({
+                content: "❌ | I couldn't fetch a duck image right now. Please try again later.",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

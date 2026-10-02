@@ -1,8 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder, Embed } = require("discord.js");
-const popcat = require("popcat-wrapper");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
+const sharp = require("sharp");
 
-// ------------------ BROKEN ------------------ //
-// reason: Canvacord unable to use Canvas class //
+const blurSigma = (width) => Math.max(6, Math.min(40, width / 24));
 
 module.exports = {
     cooldown: 5,
@@ -15,19 +14,40 @@ module.exports = {
     .setRequired(false)),
     async execute(interaction, client) {
         const user = interaction.options.getUser("user") || interaction.user;
-        let avatar = user.displayAvatarURL({ dynamic: false, format: "png", size: 4096 });
-        const blur = await popcat.blur(avatar);
 
-        const embed = new EmbedBuilder()
-        .setColor("Random")
-        .setAuthor({
-            name: user.tag,
-            iconURL: user.displayAvatarURL({ dynamic: true })
-        })
-        .setImage(blur, "blur.png")
+        try {
+            const avatar = user.displayAvatarURL({ dynamic: false, format: "png", size: 4096 });
 
-        await interaction.reply({
-            embeds: [embed]
-        })
+            const response = await fetch(avatar);
+            if (!response.ok) throw new Error(`Failed to download the avatar (HTTP ${response.status})`);
+
+            const original = Buffer.from(await response.arrayBuffer());
+            const { width } = await sharp(original).metadata();
+            const blurred = await sharp(original)
+                .blur(blurSigma(width || 256))
+                .png()
+                .toBuffer();
+
+            const embed = new EmbedBuilder()
+            .setColor("Random")
+            .setAuthor({
+                name: user.username,
+                iconURL: user.displayAvatarURL({ dynamic: true })
+            })
+            .setDescription("🔫 | Whoops!")
+
+            .setImage("attachment://blur.png")
+
+            await interaction.reply({
+                embeds: [embed],
+                files: [{ attachment: blurred, name: "blur.png" }],
+            });
+        } catch (err) {
+            console.log(err);
+            await interaction.reply({
+                content: "❌ | I couldn't blur that avatar. Please try again later.",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

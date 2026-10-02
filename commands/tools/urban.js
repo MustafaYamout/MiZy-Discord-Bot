@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const fetch = require("node-fetch");
-const url = "https://api.urbandictionary.com/v0/define?term=";
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
+
+const API = "https://api.urbandictionary.com/v0/define?term=";
 
 module.exports = {
     cooldown: 5,
@@ -14,31 +14,40 @@ module.exports = {
     .setRequired(true)),
     async execute(interaction, client) {
         const word = interaction.options.getString("word");
-        
-        const res = await fetch(url + word);
-        const data = await res.json();
-        const list = data.list[0]
-        const definition = list.definition;
-        const link = list.permalink;
-        const example = list.example;
-        const author = list.author;
-        const thumbsup = list.thumbs_up;
-        const thumbsdown = list.thumbs_down;
 
+        try {
+            const res = await fetch(API + encodeURIComponent(word));
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const embed = new EmbedBuilder()
-        .setColor("Random")
-        .setTitle(`Urban Dictionary: ${word}`)
-        .setURL(`${link}`)
-        .setDescription(`**Definition:** \n*${definition}* \n\n**Example:** \n*${example}*`)
-        .addFields(
-            { name: "Author", value: `${author}`, inline: true },
-            { name: "Rating", value: `👍 ${thumbsup} | 👎 ${thumbsdown}`, inline: true }
+            const data = await res.json();
+
+            if (!Array.isArray(data.list) || !data.list.length) {
+                return await interaction.reply({
+                    content: `❌ | I couldn't find a definition for \`${word}\`.`,
+                    flags: MessageFlags.Ephemeral,
+                });
+            }
+
+            const list = data.list[0];
+
+            const embed = new EmbedBuilder()
+            .setColor("Random")
+            .setTitle(`Urban Dictionary: ${word}`)
+            .setURL(`${list.permalink}`)
+            .setDescription(`**Definition:** \n*${list.definition}* \n\n**Example:** \n*${list.example}*`)
+            .addFields(
+                { name: "Author", value: `${list.author}`, inline: true },
+                { name: "Rating", value: `👍 ${list.thumbs_up} | 👎 ${list.thumbs_down}`, inline: true }
             )
-        .setTimestamp();
-        
-        await interaction.reply({
-            embeds: [embed]
-        })
+            .setTimestamp();
+
+            await interaction.reply({ embeds: [embed] });
+        } catch (err) {
+            console.log(err);
+            await interaction.reply({
+                content: `❌ | An error occured while searching Urban Dictionary: ${err}`,
+                flags: MessageFlags.Ephemeral,
+            });
+        }
     }
 }

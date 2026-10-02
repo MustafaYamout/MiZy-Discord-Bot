@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
-const ms = require("ms");
+const { SlashCommandBuilder, PermissionsBitField, MessageFlags } = require("discord.js");
 
 module.exports = {
     cooldown: 3,
@@ -11,35 +10,40 @@ module.exports = {
     .setDescription("Input the message ID of the giveaway you would like to resume.")
     .setRequired(true)),
     async execute(interaction, client) {
-        const MessageID = interaction.options.getString("messageid")
-        const giveaway = client.giveaways.giveaways.find((g) => g.messageId === MessageID && g.guildId === interaction.guildId);
-
-
         if (!interaction.inGuild()) return await interaction.reply({
             content: "❌ | This command can only be used in a server!",
-            ephemeral: true
+            flags: MessageFlags.Ephemeral,
         });
 
-        if (!interaction.member.roles.cache.some(role => role.name === "Giveaways")) return await interaction.reply({
-            content: "❌ | You don't have the `Giveaways` role to start a giveaway!",
-            ephemeral: true
+        const allowed = interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
+            || interaction.member.roles.cache.some(role => role.name === "Giveaways");
+
+        if (!allowed) return await interaction.reply({
+            content: "❌ | You need the `ManageGuild` permission or the `Giveaways` role to do that!",
+            flags: MessageFlags.Ephemeral,
         });
 
-        if(!giveaway) return await interaction.reply({
-            content: "❌ | I couldn't find a giveaway for \`" + MessageID + "\`. Maybe this message ID is not from this guild?",
-            ephemeral: true
+        const MessageID = interaction.options.getString("messageid");
+        const giveaway = client.giveaways.giveaways.find((g) => g.messageId === MessageID && g.guildId === interaction.guildId);
+
+        if (!giveaway) return await interaction.reply({
+            content: "❌ | I couldn't find a giveaway for `" + MessageID + "`. Maybe this message ID is not from this guild?",
+            flags: MessageFlags.Ephemeral,
         });
 
-        client.giveaways.unpause(MessageID).then(() => {
-            interaction.reply({
+        try {
+            await client.giveaways.unpause(MessageID);
+
+            await interaction.reply({
                 content: "✅ | Successfully unpaused the giveaway!",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral,
             });
-        }).catch((err) => {
-            interaction.reply({
-                content: "❌ | I couldn't find a giveaway for \`" + MessageID + "\`. Maybe this message ID is not from this guild?",
-                ephemeral: true
+        } catch (err) {
+            console.log(err);
+            await interaction.reply({
+                content: "❌ | I couldn't resume that giveaway. It may not be paused.",
+                flags: MessageFlags.Ephemeral,
             });
-        });
+        }
     }
 }

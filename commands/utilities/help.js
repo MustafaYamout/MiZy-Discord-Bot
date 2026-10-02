@@ -1,4 +1,5 @@
 const { ComponentType, EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
+
 const emojis = {
     "utilities": "🔧",
     "fun": "🎉",
@@ -18,7 +19,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Provides information for each command."),
-    
+
     async execute(interaction, client) {
         const directories = [...new Set(client.commands.map(command => command.folder))];
 
@@ -38,7 +39,6 @@ module.exports = {
             };
         });
 
-
         const embed = new EmbedBuilder()
         .setTitle("Help Menu")
         .setColor("Random")
@@ -57,13 +57,11 @@ module.exports = {
                         return {
                             label: cmd.directory,
                             value: cmd.directory.toLowerCase(),
-                            emoji: emojis[cmd.directory.toLowerCase() || null],
+                            emoji: emojis[cmd.directory.toLowerCase()],
                             description: `Commands in the ${cmd.directory} Category.`
                         }
                     })
-            
                 )
-            
             )
         ]
 
@@ -72,17 +70,18 @@ module.exports = {
             components: components(false)
         });
 
-        const filter = (interaction) => interaction.user.id === interaction.member.id;
-
-        const collector = interaction.channel.createMessageComponentCollector({
-            filter,
-            ComponentType: ComponentType.StringSelect
+        const collector = initialMessage.createMessageComponentCollector({
+            componentType: ComponentType.StringSelect,
+            time: 300000
         });
 
-        collector.on("collect", (interaction) => {
-            const [ directory ] = interaction.values;
+        collector.on("collect", (i) => {
+            if (i.user.id !== interaction.user.id) return;
+
+            const [ directory ] = i.values;
 
             const category = categories.find((x) => x.directory.toLowerCase() === directory);
+            if (!category) return;
 
             const categoryEmbed = new EmbedBuilder()
             .setTitle(`${emojis[category.directory.toLowerCase()]} ${formatString(category.directory)} Commands`)
@@ -99,15 +98,11 @@ module.exports = {
             )
             .setFooter({ text: "Made with ❤️ with Node.js"});
 
-            interaction.update({
-                embeds: [categoryEmbed]
-            });
+            i.update({ embeds: [categoryEmbed] });
         });
 
-        collector.on("end", () => {
-            initialMessage.edit({
-                components: components(true)
-            });
+        collector.on("end", (collected) => {
+            initialMessage.edit({ components: components(true) }).catch(() => {});
         })
     }
 }

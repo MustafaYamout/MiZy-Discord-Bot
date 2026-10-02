@@ -7,7 +7,7 @@ module.exports = {
             .setColor("Green")
             .setTitle(`${client.lemoji.success} | Song has been added to queue!`)
             .setThumbnail(song.thumbnail)
-            .setDescription(`\`${song.name}\` - \`${song.formattedDuration}\` - Requested by ${song.user}`)
+            .setDescription(`\`${song.name}\` - \`${song.formattedDuration}\` - Requested by ${song.user.username}`)
             .setTimestamp()
 
         await queue.textChannel.send({ embeds: [embed] });

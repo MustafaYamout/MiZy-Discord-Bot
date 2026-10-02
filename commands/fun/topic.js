@@ -1,6 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 const topic = require("../../assets/topics.json");
-
 
 module.exports = {
     cooldown: 3,
