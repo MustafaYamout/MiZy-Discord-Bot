@@ -124,7 +124,7 @@ git push -u origin <branch-name>
 6. Submit a pull request
 
 ## Project Activity
-![Alt](https://repobeats.axiom.co/api/embed/eff14131c4c687f536d86fdd174bfb10278ddfff.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/5c940b404049dd4b525365bb181184fda27eaf45.svg "Repobeats analytics image")
 
 ## License
 This project is licensed under the [GNU GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/) License - see the [LICENSE](LICENSE) file for details.
