@@ -71,7 +71,6 @@ Enable both of these in the Discord Developer Portal under **Bot → Privileged 
 or the corresponding features will not work:
 
 - **Server Members Intent** — required by `/serverinfo` and by the giveaway manager
-- **Presence Intent** — not currently required
 
 ## Installation Guide
 
